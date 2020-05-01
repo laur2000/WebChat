@@ -1,16 +1,18 @@
 import { credentials } from './config';
-import express, { Application, Request, Response, NextFunction } from 'express';
-import https, { Server } from 'https'
+import express from 'express';
+import https from 'https'
 import routes from './api';
-const app: Application = express();
-const server: Server = https.createServer(credentials, app);
 
-app.use('/', routes());
+const app = express();
+const server = https.createServer(credentials, app);
+
+
+app.use('/', routes(server));
 
 server.listen(process.env.PORT, () => {
     console.log(`
-    🔥🔥🔥🔥🔥
-    Server started listening to port ${process.env.PORT}
-    🔥🔥🔥🔥🔥
+    ################################################
+        🛡️  Server listening on port: ${process.env.PORT} 🛡️ 
+    ################################################
     `);
 });
