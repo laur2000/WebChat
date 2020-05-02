@@ -6,7 +6,7 @@ import routes from './api';
 const app = express();
 const server = https.createServer(credentials, app);
 
-
+app.use(require('cors')());
 app.use('/', routes(server));
 
 server.listen(process.env.PORT, () => {

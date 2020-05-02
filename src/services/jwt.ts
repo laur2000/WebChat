@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 
 const secret = process.env.JWT_SECRET;
+export function getExpRemaining(exp: number) {
+    return Math.floor((new Date(exp * 1000).getTime() - Date.now()) / 1000);
+}
+
 export function getToken(token: string | undefined): string {
     var res = "";
     if (token) {
@@ -17,9 +21,9 @@ export function getToken(token: string | undefined): string {
     return res;
 }
 
-export async function verify(token: string) {
+export async function verify(token: string, JWT_SECRET?: string) {
     return await new Promise((resolve, reject) => {
-        jwt.verify(token, secret, (error, decoded) => {
+        jwt.verify(token, JWT_SECRET ? JWT_SECRET : secret, (error, decoded) => {
             if (error) {
                 reject(error);
             }
@@ -30,9 +34,9 @@ export async function verify(token: string) {
     });
 }
 
-export async function sign(payload: any, options?: any) {
+export async function sign(payload: any, JWT_SECRET?: string, options?: any) {
     return await new Promise((resolve, reject) => {
-        jwt.sign(payload, secret, options, (error: Error | null, token: string | undefined) => {
+        jwt.sign(payload, JWT_SECRET ? JWT_SECRET : secret, options, (error: Error | null, token: string | undefined) => {
             if (error) {
                 reject(error);
             }
@@ -41,4 +45,8 @@ export async function sign(payload: any, options?: any) {
             }
         });
     });
+}
+
+export function decode(payload: any) {
+    return jwt.decode(payload);
 }
