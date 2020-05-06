@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #f { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+     #f input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #f button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #conn { position: fixed;
+  left: 0;
+  bottom: 50px;
+  width: 100%;
+  background-color: white;
+  color: black;
+  text-align: left;}
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #messages { margin-bottom: 90px }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="conn" action="">
+      <label for="name">Name:    </label>
+      <input id="name" autocomplete="off" />
+     <label for="channel">Channel:   </label>
+     <input id="channel" autocomplete="off" />
+      <button>Connect</button>
+    </form>
+    <form id="f" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function () {
+        $("#conn").submit(function(){
+        
+           $.post("https://chat.meantoplay.games/token", {
+	"secret": "1",
+	"payload":{
+		"sub": "asdasf-123123",
+		"channel": $("#channel").val(),
+		"name":$("#name").val()
+	},
+	"options": {
+		"expiresIn": "1h"
+	}
+}, function(data,status){
+              console.log(data);
+          
+                console.log("connecting");
+          const token = data.success.token
+        var socket = io.connect('https://chat.meantoplay.games/chat',{query:"token="+"Bearer "+token});
+        socket.on('join', appendMessage);
+        socket.on('disconnected',appendMessage);
+        socket.on('message', appendMessage); 
+        $('#f').submit(function(){
+          socket.emit('message', $('#m').val());
+          setTimeout(() => $('#m').val(''),50);
+          return false;
+        });       
+            })
+          
+        return false;
+        })
+        
+      });
+
+      function appendMessage(msg) {
+        $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+      }
+    </script>
+  </body>
+</html>

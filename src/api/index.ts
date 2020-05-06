@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import channels from './routes/channels';
 import chat from './routes/chat';
-import signToken from './routes/signToken';
+import signToken from './routes/tokens';
 import bodyParser from 'body-parser';
 
 export default (server: any) => {

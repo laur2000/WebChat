@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { getToken, verify, decode } from '../../services/jwt';
-import { secrets } from '../routes/channels';
+import ChannelProvider from '../../services/channelProvider';
 export default function auth(socket: Socket, next: any) {
     if (!socket.handshake.query) {
         socket.disconnect(true);
@@ -9,11 +9,11 @@ export default function auth(socket: Socket, next: any) {
     const token = getToken(socket.handshake.query.token);
     const payload = <any>decode(token);
     const channel = payload.channel;
-    if (!channel || !secrets[channel]) {
+    if (!channel || !ChannelProvider.channelExist(channel)) {
         socket.disconnect(true);
         return;
     }
-    verify(token, secrets[channel]).then((decode) => {
+    verify(token, ChannelProvider.getChannelSecret(channel)).then((decode) => {
         next();
         socket.handshake.query = decode;
     }).catch((error) => {

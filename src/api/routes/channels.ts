@@ -1,10 +1,43 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import auth from '../middlewares/authRequest';
+import ChannelProvider from '../../services/channelProvider';
 const route = Router();
-var channel_id = 0;
-export const secrets: { [ch: string]: string } = {};
+
 export default (app: Router) => {
     app.use('/channel', route);
+
+    route.get('/:channelId', auth, (req: Request, res: Response, next: NextFunction) => {
+        const channelId = req.params.channelId;
+        if (ChannelProvider.channelExist(channelId)) {
+            const channel = ChannelProvider.getChannel(channelId);
+            const users = [];
+            const usersDict = channel.getUsers();
+            for (let userId in usersDict) {
+                const user = usersDict[userId];
+                users.push({
+                    id: user.getId(),
+                    name: user.getName()
+                });
+            }
+            res.send({
+                error: null,
+                success: {
+                    name: channel.getName(),
+                    users
+                }
+            });
+            res.end();
+        }
+        else {
+            res.status(404);
+            res.send({
+                error: "Channel not found",
+                success: null
+            });
+            res.end();
+        }
+
+    });
 
     route.post('/', (req: Request, res: Response, next: NextFunction) => {
         const payload = req.body;
@@ -16,22 +49,14 @@ export default (app: Router) => {
             });
             res.end();
         } else {
-            const channel = 'ch' + nextChannelId();
-            secrets[channel] = payload.secret;
-
+            const channel = ChannelProvider.addChannel(payload.secret)
             res.send({
                 error: null,
-                success: {
-                    channel: channel
-                }
+                success: channel.getId()
             });
             res.end();
         }
 
     })
 
-}
-
-function nextChannelId() {
-    return channel_id++;
 }

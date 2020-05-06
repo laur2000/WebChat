@@ -1,8 +1,29 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { sign, decode, getExpRemaining } from '../../services/jwt';
+import { sign, decode, getExpRemaining, invalidate } from '../../services/jwt';
 const route = Router();
 export default function (app: Router) {
-    app.use('/sign', route);
+    app.use('/token', route);
+
+
+    route.get('/:token', (req: Request, res: Response, next: NextFunction) => {
+        const token = req.params.token;
+        try {
+            const payload = <any>decode(token);
+            res.send({
+                error: null,
+                success: {
+                    payload: payload
+                }
+            })
+        }
+        catch (error) {
+            res.send({
+                error: error,
+                success: null
+            });
+        }
+        res.end();
+    })
 
     route.post('/', (req: Request, res: Response, next: NextFunction) => {
         const secret = req.body.secret;
@@ -46,5 +67,17 @@ export default function (app: Router) {
                 });
         }
 
+    });
+
+    route.delete('/', (req: Request, res: Response, next: NextFunction) => {
+        const token = req.body.token;
+        invalidate(token);
+        res.send({
+            error: null,
+            success: {
+                message: "Token invalidated successfully"
+            }
+        });
+        res.end();
     })
 }
