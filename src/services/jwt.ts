@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
+import { EventEmitter } from 'events';
 
 const secret = process.env.JWT_SECRET;
 const invalid_tokens: { [token: string]: boolean } = {};
+
+export const InvalidateToken: EventEmitter = new EventEmitter();
+
 export function getExpRemaining(exp: number) {
     return Math.floor((new Date(exp * 1000).getTime() - Date.now()) / 1000);
 }
@@ -63,4 +67,6 @@ export function decode(payload: any) {
 
 export function invalidate(token: string) {
     invalid_tokens[token] = true;
+    InvalidateToken.emit('invalidated', token);
+
 }

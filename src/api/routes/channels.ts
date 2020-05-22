@@ -6,7 +6,7 @@ const route = Router();
 export default (app: Router) => {
     app.use('/channel', route);
 
-    route.get('/:channelId', auth, (req: Request, res: Response, next: NextFunction) => {
+    route.get('/:channelId', auth("ch:read"), (req: Request, res: Response, next: NextFunction) => {
         const channelId = req.params.channelId;
         if (ChannelProvider.channelExist(channelId)) {
             const channel = ChannelProvider.getChannel(channelId);
@@ -41,7 +41,7 @@ export default (app: Router) => {
 
     route.post('/', (req: Request, res: Response, next: NextFunction) => {
         const payload = req.body;
-        if (!payload && !payload.secret) {
+        if (!payload || !payload.secret) {
             res.status(400);
             res.send({
                 error: "Payload secret was not providen",
@@ -57,6 +57,25 @@ export default (app: Router) => {
             res.end();
         }
 
+    });
+
+    route.patch('/:channelId', auth("ch:read", "ch:edit"), (req: Request, res: Response, next: NextFunction) => {
+        const payload = req.body;
+        if (!payload || !(payload.secret || payload.name)) {
+            res.status(400)
+            res.send({
+                error: "Payload is empty",
+                success: null
+            });
+            res.end();
+        }
+        else {
+            res.send({
+                error: null,
+                success: "Channel modified successfully"
+            });
+            res.end();
+        }
     })
 
 }

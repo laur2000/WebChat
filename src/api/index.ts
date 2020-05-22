@@ -3,6 +3,7 @@ import channels from './routes/channels';
 import chat from './routes/chat';
 import signToken from './routes/tokens';
 import bodyParser from 'body-parser';
+import { EventEmitter } from 'events';
 
 export default (server: any) => {
     const app = Router();

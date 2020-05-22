@@ -16,6 +16,7 @@ export default function auth(socket: Socket, next: any) {
     verify(token, ChannelProvider.getChannelSecret(channel)).then((decode) => {
         next();
         socket.handshake.query = decode;
+        socket.handshake.query.token = token;
     }).catch((error) => {
         socket.disconnect(true);
     });
