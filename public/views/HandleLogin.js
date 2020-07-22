@@ -1,7 +1,7 @@
 import React from "react";
 //import { Router } from "@reach/router";
 
-const UnauthenticatedApp = () => {
+const HandleLogin = () => {
   return (
     <div className="wrapper">
       <h1>Login or Register</h1>
@@ -9,4 +9,4 @@ const UnauthenticatedApp = () => {
   );
 };
 
-export default UnauthenticatedApp;
+export default HandleLogin;

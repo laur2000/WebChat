@@ -49,7 +49,8 @@ class Chat extends React.Component {
       headers,
     };
     fetch(
-      "https://chat.meantoplay.games/channel/" + this.props.payload.channel,
+      "https://chat.meantoplay.games/api/v1/channel/" +
+        this.props.payload.channel,
       config
     )
       .then((res) => res.json())

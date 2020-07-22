@@ -378,6 +378,7 @@ a.article:hover {
 }
 
 #messages {
+  word-wrap: break-word;
   overflow: auto;
   margin-bottom: 10px;
   min-height: 250px;

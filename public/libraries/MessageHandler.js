@@ -12,6 +12,9 @@ class MessageHandler {
         token: "Bearer " + this.token,
       },
     });
+    this.connection.on("connect", () => {
+      console.log("Connected");
+    });
   }
 
   disconnect() {

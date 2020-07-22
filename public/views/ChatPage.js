@@ -3,7 +3,7 @@ import React from "react";
 import Chat from "../components/Chat";
 import SideBar from "../components/SideBar";
 
-const AuthenticatedApp = () => {
+const ChatPage = () => {
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMjM1IiwiY2hhbm5lbCI6ImNoMSIsIm5hbWUiOiJKb2huIERvZSIsInJvbGVzIjpbImNoOnJlYWQiLCJjaDpjb25uZWN0Il0sImlhdCI6MTU5NTM3NzYwMCwiZXhwIjoxNTk1OTgyNDAwfQ.VtRRUZMRT3IAAUUqbrPNvFuk0jCwdhcuW0YohVsgeuI";
   const connection = JSON.parse(atob(token.split(".")[1]));
@@ -27,4 +27,4 @@ const AuthenticatedApp = () => {
   );
 };
 
-export default AuthenticatedApp;
+export default ChatPage;
