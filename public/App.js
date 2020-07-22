@@ -1,23 +1,15 @@
 import React from "react";
 import { render } from "react-dom";
-import Message from "./components/message";
-import Clock from "./components/clock";
+import AuthenticatedApp from "./views/AuthenticatedApp";
+import UnauthenticatedApp from "./views/UnauthanticatedApp";
+//import { Router } from "@reach/router";
+
+const authenticated = true;
 const App = () => {
   return (
-    <div>
-      <h1>WebChat</h1>
-      <Message
-        name="Laurentiu"
-        message="Hello World!"
-        date={new Date().toDateString()}
-      />
-      <Message
-        name="Marta"
-        message="Hello Handsome!"
-        date={new Date().toDateString()}
-      />
-      <Clock />
-    </div>
+    <React.StrictMode>
+      {authenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+    </React.StrictMode>
   );
 };
 render(<App />, document.getElementById("root"));
