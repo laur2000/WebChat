@@ -5,7 +5,7 @@ import SideBar from "../components/SideBar";
 
 const ChatPage = () => {
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMjM1IiwiY2hhbm5lbCI6ImNoMSIsIm5hbWUiOiJKb2huIERvZSIsInJvbGVzIjpbImNoOnJlYWQiLCJjaDpjb25uZWN0Il0sImlhdCI6MTU5NTM3NzYwMCwiZXhwIjoxNTk1OTgyNDAwfQ.VtRRUZMRT3IAAUUqbrPNvFuk0jCwdhcuW0YohVsgeuI";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMjM1IiwiY2hhbm5lbCI6ImNoMCIsIm5hbWUiOiJKb2huIERvZSIsInJvbGVzIjpbImNoOnJlYWQiLCJjaDpjb25uZWN0Il0sImlhdCI6MTU5NTUxNDgyMSwiZXhwIjoxNTk2MTE5NjIxfQ.wPcSZlPFYZKxLK6LndLdme5y0EuUQQLhv49KbS_tDH8";
   const connection = JSON.parse(atob(token.split(".")[1]));
   return (
     <div className="wrapper">

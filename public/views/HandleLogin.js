@@ -1,12 +1,17 @@
 import React from "react";
-//import { Router } from "@reach/router";
-
+import { useAuth0 } from "@auth0/auth0-react";
+import { navigate } from "@reach/router";
+import Loading from "../components/Loading";
 const HandleLogin = () => {
-  return (
-    <div className="wrapper">
-      <h1>Login or Register</h1>
-    </div>
-  );
+  const { isLoading, isAuthenticated } = useAuth0();
+  if (!isLoading) {
+    if (isAuthenticated) {
+      navigate("/webchat");
+    } else {
+      navigate("/");
+    }
+  }
+  return <Loading />;
 };
 
 export default HandleLogin;

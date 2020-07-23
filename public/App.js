@@ -9,7 +9,6 @@ import HandleLogin from "./views/HandleLogin";
 
 const App = () => {
   //const { isAuthenticated } = useContext(AuthContext);
-
   return (
     <React.StrictMode>
       <Auth0Provider
@@ -18,7 +17,7 @@ const App = () => {
         redirectUri={window.location.origin + "/auth"}
       >
         <Router>
-          <LandingPage path="/" />
+          <LandingPage default path="/" />
           <ChatPage path="/webchat" />
           <HandleLogin path="/auth" />
         </Router>

@@ -7,6 +7,7 @@ class MessageHandler {
   url = "https://chat.meantoplay.games/chat";
 
   connect() {
+    console.log("Connecting");
     this.connection = io.connect(this.url, {
       query: {
         token: "Bearer " + this.token,
