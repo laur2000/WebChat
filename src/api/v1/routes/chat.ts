@@ -8,7 +8,7 @@ export default (server: any) => {
   chat.use(addUser);
   chat.on("connection", (socket: Socket) => {
     const { user, channel } = socket.handshake.query;
-    const channelId = channel.getId();
+    const channelId = channel._id;
 
     const room = socket.join(channelId);
     chat.to(channelId).emit("join", {

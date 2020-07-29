@@ -88,12 +88,12 @@ export function verifyPermissions(
   token: string,
   requiredPermissions: string[]
 ) {
-  return new Promise((resolve, error) => {
+  return new Promise(async (resolve, error) => {
     //Check if it is a valid JWT structure
     const payload = <any>decode(token);
     if (payload && payload.channel) {
       //Check if the signature is valid
-      const secret = ChannelProvider.getChannelSecret(payload.channel);
+      const secret = await ChannelProvider.getChannelSecret(payload.channel);
       if (secret) {
         verify(token, secret)
           .then(() => {

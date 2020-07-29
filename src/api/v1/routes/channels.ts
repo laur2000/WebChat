@@ -9,20 +9,17 @@ export default (app: Router) => {
   route.get(
     "/:channelId",
     auth(["channel:read"]),
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       const channelId = req.params.channelId;
-      if (ChannelProvider.channelExist(channelId)) {
-        const channel = ChannelProvider.getChannel(channelId);
+      try {
+        const channel = await ChannelProvider.getChannel(channelId);
+        if (!channel) throw new Error("Channel not found");
         res.send({
           error: null,
-          success: {
-            name: channel.getName(),
-            description: channel.getDescription(),
-            users: channel.getUsersArray(),
-          },
+          success: channel,
         });
         res.end();
-      } else {
+      } catch (error) {
         res.status(404);
         res.send({
           error: "Channel not found",
@@ -43,27 +40,33 @@ export default (app: Router) => {
       });
       res.end();
     } else {
-      const channel = ChannelProvider.addChannel(
-        payload.secret,
-        payload.name,
-        payload.description
-      );
-      res.send({
-        error: null,
-        success: {
-          id: channel.getId(),
-          name: channel.getName(),
-          description: channel.getDescription(),
-        },
-      });
-      res.end();
+      if (payload._id) {
+        delete payload._id;
+      }
+      ChannelProvider.addChannel(payload)
+        .then((channel: any) => {
+          res.status(201);
+          res.send({
+            error: null,
+            success: channel,
+          });
+          res.end();
+        })
+        .catch(() => {
+          res.status(400);
+          res.send({
+            error: "Invalid character . inside keys",
+            success: null,
+          });
+          res.send();
+        });
     }
   });
 
   route.patch(
     "/:channelId",
     auth(["channel:write"]),
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       const payload = req.body;
       const channelId = req.params.channelId;
       if (!payload || Object.keys(payload).length == 0) {
@@ -73,58 +76,54 @@ export default (app: Router) => {
           success: null,
         });
         res.end();
-      } else {
-        const channel = ChannelProvider.getChannel(channelId);
-
-        if (payload.name) channel.setName(payload.name);
-        if (payload.description) channel.setDescription(payload.description);
-        if (payload.secret) channel.setSecret(payload.secret);
+      } else if (payload.secret) {
+        res.status(403);
         res.send({
-          error: null,
-          success: {
-            name: channel.getName(),
-            description: channel.getDescription(),
-          },
+          error: "Secret cannot be modified in this endpoint",
+          success: null,
         });
         res.end();
+      } else {
+        try {
+          const channel = await ChannelProvider.updateChannel(
+            channelId,
+            payload
+          );
+
+          res.send({
+            error: null,
+            success: channel,
+          });
+          res.end();
+        } catch (error) {
+          res.status(404);
+          res.send({
+            error: "Channel not Found",
+            success: null,
+          });
+          res.end();
+        }
       }
     }
   );
 
   route.delete(
     "/:channelId",
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       const channelId = req.params.channelId;
       const payload = req.body;
-      if (ChannelProvider.channelExist(channelId)) {
-        if (
-          payload &&
-          payload.secret &&
-          payload.secret == ChannelProvider.getChannelSecret(channelId)
-        ) {
-          const channel = ChannelProvider.getChannel(channelId);
-          res.send({
-            error: null,
-            success: {
-              name: channel.getName(),
-              description: channel.getDescription(),
-              users: channel.getUsersArray(),
-            },
-          });
-          ChannelProvider.removeChannel(channelId);
-          res.end();
-        } else {
-          res.status(403);
-          res.send({
-            error: "Secret is not valid",
-            success: null,
-          });
-          res.end();
-        }
+      const secret = await ChannelProvider.getChannelSecret(channelId);
+      if (payload && payload.secret && payload.secret == secret) {
+        const channel = await ChannelProvider.removeChannel(channelId);
+        res.send({
+          error: null,
+          success: channel,
+        });
+        res.end();
       } else {
         res.status(404);
         res.send({
-          error: "Channel not found",
+          error: "Channel does not exist or secret is not valid",
           success: null,
         });
         res.end();

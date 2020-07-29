@@ -26,21 +26,22 @@ export default function auth(socket: Socket, next: any) {
 
   const payload = <any>decode(token);
   if (payload && payload.channel) {
-    const secret = ChannelProvider.getChannelSecret(payload.channel);
-    if (secret) {
-      verify(token, secret)
-        .then((decode) => {
-          socket.handshake.query = decode;
-          connections[token] = socket;
-          next();
-        })
-        .catch((error: any) => {
-          socket.disconnect(true);
-          return;
-        });
-    } else {
-      socket.disconnect(true);
-      return;
-    }
+    ChannelProvider.getChannelSecret(payload.channel).then((secret) => {
+      if (secret) {
+        verify(token, secret)
+          .then((decode) => {
+            socket.handshake.query = decode;
+            connections[token] = socket;
+            next();
+          })
+          .catch((error: any) => {
+            socket.disconnect(true);
+            return;
+          });
+      } else {
+        socket.disconnect(true);
+        return;
+      }
+    });
   }
 }

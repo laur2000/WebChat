@@ -1,52 +1,62 @@
 import Channel from "../models/channel";
 import { db } from "./db";
+import { ObjectID } from "mongodb";
+const sanitize = require("mongo-sanitize");
 class ChannelProvider {
-  private channel_id: number;
-  private channels: { [channelId: string]: Channel };
+  private collection: string = "channels";
 
-  constructor() {
-    this.channel_id = 0;
-    this.channels = {};
-  }
-
-  private nextChannelId() {
-    return "ch" + this.channel_id++;
-  }
-
-  public addChannel(secret: string, name?: string, description?: string) {
-    const channelId = this.nextChannelId();
-    return (this.channels[channelId] = new Channel(
-      channelId,
-      secret,
-      name,
-      description
-    ));
-  }
-
-  public getChannel(channelId: string) {
-    return this.channels[channelId];
-  }
-
-  public getChannels() {
-    return this.channels;
-  }
-
-  public getChannelSecret(channelId: string) {
-    if (this.channelExist(channelId)) {
-      return this.channels[channelId].getSecret();
-    } else {
+  public async addChannel(data: { [key: string]: any }) {
+    if (!data.secret) {
       return null;
     }
+    data = sanitize(data);
+    return (await db.collection(this.collection).insertOne(data)).ops[0];
+  }
+
+  public async getChannel(channelId: string) {
+    if (!ObjectID.isValid(channelId)) {
+      return null;
+    }
+    return await db
+      .collection(this.collection)
+      .findOne(new ObjectID(channelId), { projection: { secret: 0 } });
+  }
+  public async updateChannel(channelId: string, data: any) {
+    if (!ObjectID.isValid(channelId)) {
+      return null;
+    }
+    data = sanitize(data);
+    return (
+      await db
+        .collection(this.collection)
+        .findOneAndUpdate(
+          { _id: new ObjectID(channelId) },
+          { $set: data },
+          { returnOriginal: false, projection: { secret: 0 } }
+        )
+    ).value;
+  }
+
+  public async getChannelSecret(channelId: string) {
+    if (!ObjectID.isValid(channelId)) {
+      return null;
+    }
+    const channel = await db
+      .collection(this.collection)
+      .findOne(new ObjectID(channelId), { projection: { secret: 1 } });
+    return channel && channel.secret;
   }
 
   public channelExist(channelId: string) {
-    return !!this.channels[channelId];
+    return true;
   }
 
-  public removeChannel(channelId: string) {
-    if (this.channelExist(channelId)) {
-      delete this.channels[channelId];
-    }
+  public async removeChannel(channelId: string) {
+    return (
+      await db
+        .collection(this.collection)
+        .findOneAndDelete({ _id: new ObjectID(channelId) })
+    ).value;
   }
 }
 

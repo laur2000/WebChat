@@ -8,7 +8,7 @@ import notFound from "./routes/notFound";
 
 export default (server: any) => {
   const app = Router();
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: "10mb" }));
   app.use(bodyParser.urlencoded({ extended: true }));
   channels(app);
   signToken(app);
