@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import auth from "../middlewares/authRequest";
-import ChannelProvider from "../../services/channelProvider";
+import ChannelProvider from "../../../services/channelProvider";
 const route = Router();
 
 export default (app: Router) => {
@@ -8,7 +8,7 @@ export default (app: Router) => {
 
   route.get(
     "/:channelId",
-    auth("ch:read"),
+    auth(["channel:read"]),
     (req: Request, res: Response, next: NextFunction) => {
       const channelId = req.params.channelId;
       if (ChannelProvider.channelExist(channelId)) {
@@ -62,7 +62,7 @@ export default (app: Router) => {
 
   route.patch(
     "/:channelId",
-    auth("ch:read", "ch:edit"),
+    auth(["channel:write"]),
     (req: Request, res: Response, next: NextFunction) => {
       const payload = req.body;
       const channelId = req.params.channelId;
@@ -93,21 +93,34 @@ export default (app: Router) => {
 
   route.delete(
     "/:channelId",
-    auth("ch:delete"),
     (req: Request, res: Response, next: NextFunction) => {
       const channelId = req.params.channelId;
+      const payload = req.body;
       if (ChannelProvider.channelExist(channelId)) {
-        const channel = ChannelProvider.getChannel(channelId);
-        res.send({
-          error: null,
-          success: {
-            name: channel.getName(),
-            description: channel.getDescription(),
-            users: channel.getUsersArray(),
-          },
-        });
-        ChannelProvider.removeChannel(channelId);
-        res.end();
+        if (
+          payload &&
+          payload.secret &&
+          payload.secret == ChannelProvider.getChannelSecret(channelId)
+        ) {
+          const channel = ChannelProvider.getChannel(channelId);
+          res.send({
+            error: null,
+            success: {
+              name: channel.getName(),
+              description: channel.getDescription(),
+              users: channel.getUsersArray(),
+            },
+          });
+          ChannelProvider.removeChannel(channelId);
+          res.end();
+        } else {
+          res.status(403);
+          res.send({
+            error: "Secret is not valid",
+            success: null,
+          });
+          res.end();
+        }
       } else {
         res.status(404);
         res.send({

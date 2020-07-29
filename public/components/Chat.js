@@ -3,16 +3,14 @@ import InputBar from "./InputBar";
 import MessageHandler from "../libraries/MessageHandler";
 import Messages from "./Messages";
 class Chat extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    messages: [],
+    channelName: "",
+    channelDescription: "",
+  };
 
-    this.state = {
-      messages: [],
-      channelName: "",
-      channelDescription: "",
-    };
-
-    this.messageHandler = new MessageHandler(props.token);
+  componentDidMount() {
+    this.messageHandler = new MessageHandler(this.props.token);
 
     this.onMessageReceived = (message) => {
       const messages = [...this.state.messages, message];
@@ -34,9 +32,7 @@ class Chat extends React.Component {
     this.onMessageSent = (message) => {
       this.messageHandler.send(message);
     };
-  }
 
-  componentDidMount() {
     this.messageHandler.connect();
     this.messageHandler.onUserJoin(this.onUserJoin);
     this.messageHandler.onUserMessage(this.onMessageReceived);
@@ -62,6 +58,11 @@ class Chat extends React.Component {
         });
       })
       .catch(console.error);
+  }
+
+  componentWillUnmount() {
+    this.messageHandler.disconnect();
+    this.messageHandler = null;
   }
 
   render() {

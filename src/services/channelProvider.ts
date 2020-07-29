@@ -1,4 +1,5 @@
 import Channel from "../models/channel";
+import { db } from "./db";
 class ChannelProvider {
   private channel_id: number;
   private channels: { [channelId: string]: Channel };
@@ -31,7 +32,11 @@ class ChannelProvider {
   }
 
   public getChannelSecret(channelId: string) {
-    return this.channels[channelId].getSecret();
+    if (this.channelExist(channelId)) {
+      return this.channels[channelId].getSecret();
+    } else {
+      return null;
+    }
   }
 
   public channelExist(channelId: string) {

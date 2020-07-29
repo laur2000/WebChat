@@ -1,23 +1,33 @@
 import env from "./config";
 import express from "express";
 import http from "http";
-import routes from "./api";
+import routes from "./api/v1";
 import path from "path";
-const app = express();
+import { initDB } from "./services/db";
+const cors = require("cors");
 
-const server = http.createServer(app).listen(env.PORT, () => {
-  console.log(`
-    ################################################
-        🛡️  Server listening on port: ${env.PORT} 🛡️ 
-    ################################################
-    `);
-});
+(async () => {
+  const app = express();
+  await initDB();
 
-app.use(require("cors")());
-app.use("/api/v1", routes(server));
-app.use(express.static("dist"));
-app.get("*", (req, res) => {
-  res.sendFile("dist/index.html", {
-    root: __dirname + "/../",
+  const server = http.createServer(app).listen(env.PORT, () => {
+    console.log(`
+      ################################################
+          🛡️  Server listening on port: ${env.PORT} 🛡️ 
+      ################################################
+      `);
   });
-});
+
+  app.use(cors());
+  app.use("/api/v1", routes(server));
+
+  //Serve public files
+  app.use(express.static("dist"));
+
+  //Request that are not made to the api will be redirected to frontend
+  app.get("*", (req, res) => {
+    res.sendFile("dist/index.html", {
+      root: __dirname + "/../",
+    });
+  });
+})().catch(console.error);

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "@reach/router";
 class Profile extends React.Component {
   render() {
     const { name, imgSource } = this.props;
@@ -12,9 +12,9 @@ class Profile extends React.Component {
         />
         <div className="card-body">
           <div className="card-title">{name}</div>
-          <a href="/" className="card-link btn btn-outline-secondary">
+          <Link to="/" className="card-link btn btn-outline-secondary">
             Config
-          </a>
+          </Link>
         </div>
       </div>
     );
