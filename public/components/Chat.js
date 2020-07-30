@@ -17,9 +17,10 @@ class Chat extends React.Component {
       this.setState({ messages });
     };
 
-    this.onUserJoin = (user) => {
-      user.body = `Welcome ${user.name} to ${this.state.channelName}!`;
-      const messages = [...this.state.messages, user];
+    this.onUserJoin = (message) => {
+      message.body = `Welcome ${message.name} to ${this.state.channelName}!`;
+      message.name = this.state.channelName;
+      const messages = [...this.state.messages, message];
       this.setState({ messages });
     };
 

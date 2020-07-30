@@ -7,7 +7,7 @@ const LandingPage = () => {
   if (isLoading) {
     return <Loading />;
   }
-
+  console.log("Landing rendering");
   return (
     <div className="wrapper flex-column text-center">
       <h1>Landing page is coming soon</h1>
@@ -17,7 +17,7 @@ const LandingPage = () => {
       >
         {isAuthenticated ? (
           <React.Fragment>
-            <Link className="card-link btn btn-success" to="/webchat">
+            <Link className="card-link btn btn-success" to="/auth">
               Continue to chat
             </Link>
             <button className="btn" onClick={logout}>

@@ -8,6 +8,7 @@
     "lint": "eslint \"public/**/*.{js,jsx}\" --quiet",
     "dev": "nodemon src/app.ts",
     "frontend": "parcel --no-source-maps public/index.html",
+    "buildFrontend": "parcel build --no-source-maps public/index.html",
     "start": "node dist/app.js",
     "build": "tsc -p ."
   },
