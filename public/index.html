@@ -72,29 +72,25 @@
         }
         // load image if there is a pasted image
         if (blob !== null) {
-          var reader = new FileReader();
-          reader.onload = function (event) {
-            const messages = $("#messages");
-            const img = $("<img></img>", {
-              alt: "user paste image",
-              src: event.target.result,
-            });
-            img.on("load", () => {
-              console.log(img.width() + " " + messages.width());
-              img.css(
-                "width",
-                img.width() > messages.width()
-                  ? messages.width() + "px"
-                  : img.width() + "px"
-              );
-            });
+          const messages = $("#messages");
+          const img = $("<img></img>", {
+            alt: "user paste image",
+            src: URL.createObjectURL(blob),
+          });
+          img.on("load", () => {
+            console.log(img.width() + " " + messages.width());
+            img.css(
+              "width",
+              img.width() > messages.width()
+                ? messages.width() + "px"
+                : img.width() + "px"
+            );
+          });
 
-            const item = $("<li></li>", {
-              class: "list-group-item",
-            }).append(img);
-            messages.append(item);
-          };
-          reader.readAsDataURL(blob);
+          const item = $("<li></li>", {
+            class: "list-group-item",
+          }).append(img);
+          messages.append(item);
         }
       };
     </script>

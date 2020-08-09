@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
-import { userContext } from "../contexts/UserContext";
+import { metadataContext } from "../contexts/MetadataContext";
 import Chat from "../components/Chat";
 import SideBar from "../components/SideBar";
 
 const ChatPage = () => {
-  const [userInfo] = useContext(userContext);
-  const token = userInfo.global_token;
+  const [metadata] = useContext(metadataContext);
+  const username = metadata.userData.username;
+  const token = metadata.appData.global_token;
   const connection = JSON.parse(atob(token.split(".")[1]));
   console.log("ChatPage rendering");
   return (
     <div className="wrapper">
-      <SideBar username={userInfo.username} />
+      <SideBar username={username} />
       <div className="stretch-vertical d-flex flex-column " id="content">
         <Chat payload={connection} token={token} />
         <span

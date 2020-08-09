@@ -1,7 +1,9 @@
 import React from "react";
 import Channel from "./Channel";
+import { metadataContext } from "../contexts/MetadataContext";
 
 class Channels extends React.Component {
+  static contextType = metadataContext;
   state = {
     channels: [
       {
@@ -33,7 +35,7 @@ class Channels extends React.Component {
         name: "YouTube",
         description: "Chat for YouTube community",
         imgSource:
-          "https://cdn.icon-icons.com/icons2/195/PNG/256/YouTube_23392.png",
+          "https://cdn.iconscout.com/icon/free/png-256/youtube-85-226402.png",
       },
 
       {
@@ -50,6 +52,12 @@ class Channels extends React.Component {
       },
     ],
   };
+  componentDidMount() {
+    /*const [metadata] = this.context;
+    const channels = metadata.app.channels || [];
+    this.setState({ channels });
+    */
+  }
   render() {
     const { channels } = this.state;
     return (

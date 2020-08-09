@@ -3,12 +3,16 @@ import config from "../config";
 import { EventEmitter } from "events";
 import ChannelProvider from "./channelProvider";
 import { isMatch } from "lodash";
-
-/*
 import jwks from "jwks-rsa";
+
 var rsaExchange = jwks({
   jwksUri: config.RSA_URL,
 });
+
+const jwtHeader = {
+  audience: config.AUDIENCE,
+  issuer: config.ISSUER,
+};
 
 function getKey(header: any, callback: Function) {
   rsaExchange.getSigningKey(header.kid, function (err: any, key: any) {
@@ -21,11 +25,25 @@ function getKey(header: any, callback: Function) {
   });
 }
 
-const jwtHeader = {
-  audience: config.AUDIENCE,
-  issuer: config.ISSUER,
-};
-*/
+export async function authenticate(token: string) {
+  return await new Promise((resolve, reject) => {
+    if (invalid_tokens[token]) {
+      reject({
+        name: "JsonWebTokenError",
+        message: "jwt invalidated",
+      });
+    } else {
+      jwt.verify(token, getKey, (error: any, decoded: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(decoded);
+        }
+      });
+    }
+  });
+}
+
 const invalid_tokens: { [token: string]: boolean } = {};
 
 export const InvalidateToken: EventEmitter = new EventEmitter();

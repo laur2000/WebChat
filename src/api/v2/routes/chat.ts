@@ -1,10 +1,11 @@
-import { socketio } from "../../../services/socketIO";
 import { Socket } from "socket.io";
+import { socketio } from "../../../services/socketIO";
+
 import auth from "../middlewares/authSocket";
 import addUser from "../middlewares/addUserSocket";
 
 export default () => {
-  const chat = socketio.of("/chat");
+  const chat = socketio.of("/v2/chat");
   chat.use(auth);
   chat.use(addUser);
   chat.on("connection", (socket: Socket) => {

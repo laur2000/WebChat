@@ -1,8 +1,16 @@
 import React from "react";
 
 class Channel extends React.Component {
+  messageReadImage = "https://i.imgur.com/lfVN8cP.png";
+  messageNotReadImage = "https://i.imgur.com/sg0gUTG.png";
+  messageWrittingImage = "https://i.imgur.com/KtU5f54.png";
+  defaultChannelImage = "https://img.icons8.com/cotton/2x/chat.png";
+
   render() {
-    const { name, imgSource, description } = this.props;
+    let { name, imgSource, description } = this.props;
+    if (!imgSource) {
+      imgSource = this.defaultChannelImage;
+    }
     return (
       <div
         className="d-flex align-items-center"

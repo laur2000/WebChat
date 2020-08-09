@@ -1,11 +1,11 @@
 import React from "react";
-import { userContext } from "../contexts/UserContext";
+import { metadataContext } from "../contexts/MetadataContext";
 import { withAuth0 } from "@auth0/auth0-react";
 import { navigate } from "@reach/router";
 import Loading from "../components/Loading";
 
 class HandleLogin extends React.Component {
-  static contextType = userContext;
+  static contextType = metadataContext;
   state = {
     userLoaded: false,
   };
@@ -21,8 +21,8 @@ class HandleLogin extends React.Component {
       isAuthenticated,
       getAccessTokenSilently,
     } = this.props.auth0;
-    const [userInfo, setUserInfo] = this.context;
-    console.log(userInfo);
+    const [metadata, setMetadata] = this.context;
+    console.log(metadata);
     if (!isLoading) {
       if (isAuthenticated) {
         const AUTH_DOMAIN = "https://chat-api.eu.auth0.com/api/v2/";
@@ -41,10 +41,12 @@ class HandleLogin extends React.Component {
             this.setState({
               userLoaded: true,
             });
-            setUserInfo({
-              username: userData.user_metadata.username,
-              global_token: userData.app_metadata.global_token,
-            });
+            const metadata = {
+              userData: userData.user_metadata,
+              appData: userData.app_metadata,
+            };
+            setMetadata(metadata);
+            console.log(metadata);
             navigate("/webchat");
           })
           .catch((err) => {

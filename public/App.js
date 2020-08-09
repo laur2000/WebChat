@@ -6,7 +6,7 @@ import AuthContext from "./contexts/AuthContext";
 import ChatPage from "./views/ChatPage";
 import LandingPage from "./views/LandingPage";
 import HandleLogin from "./views/HandleLogin";
-import UserContext from "./contexts/UserContext";
+import UserContext from "./contexts/MetadataContext";
 
 const App = () => {
   console.log("App rendering");

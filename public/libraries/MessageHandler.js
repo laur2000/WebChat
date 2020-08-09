@@ -4,7 +4,7 @@ class MessageHandler {
     this.token = token;
   }
 
-  url = "https://chat.meantoplay.games/chat";
+  url = "https://chat.meantoplay.games/v2/chat";
 
   connect() {
     console.log("Connecting");
