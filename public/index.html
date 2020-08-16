@@ -39,7 +39,33 @@
   </head>
 
   <body>
-    <div id="root">React not rendered</div>
+    <div id="root">
+      <style></style>
+      <div
+        className="loading"
+        style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"
+      >
+        <div
+          className="loading-text"
+          style="
+            text-align: center;
+            margin: auto;
+            width: 50%;
+            top: 47%;
+            position: relative;
+            font-size: 3vw;
+          "
+        >
+          <span className="loading-text-words">L</span>
+          <span className="loading-text-words">O</span>
+          <span className="loading-text-words">A</span>
+          <span className="loading-text-words">D</span>
+          <span className="loading-text-words">I</span>
+          <span className="loading-text-words">N</span>
+          <span className="loading-text-words">G</span>
+        </div>
+      </div>
+    </div>
     <script src="App.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

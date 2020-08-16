@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
-import { getJwtToken, verify, decode } from "../../../services/jwt";
+import { getJwtToken, verify, decode } from "../../../services/authProvider";
 import ChannelProvider from "../../../services/channelProvider";
-import { InvalidateToken } from "../../../services/jwt";
+import { InvalidateToken } from "../../../services/authProvider";
 
 const connections: { [key: string]: any } = {};
 

@@ -458,7 +458,17 @@ a.article:hover {
     display: none;
   }
 }
+@media (max-width: 1024px) {
+  .loading-text {
+    font-size: 5vw;
+  }
+}
 
+@media (min-width: 1024px) {
+  .loading-text {
+    font-size: 3vw;
+  }
+}
 @media (max-width: 768px) {
   #sidebar {
     margin-left: -250px;
@@ -474,4 +484,23 @@ a.article:hover {
     padding-left: 0px;
     padding: 20px !important;
   }
+
+  .loading-text {
+    font-size: 8vw;
+  }
+}
+/* ---------------------------------------------------
+    OVERWRITE BOOSTRAP
+----------------------------------------------------- */
+.btn-outline-secondary {
+  color: #211f1f;
+  background-color: transparent;
+  background-image: none;
+  border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  color: #000;
+  background-color: #dadde0;
+  border-color: #6c757d;
 }

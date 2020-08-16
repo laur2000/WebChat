@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 import { EventEmitter } from "events";
 import ChannelProvider from "./channelProvider";
-import { isMatch } from "lodash";
 import jwks from "jwks-rsa";
 
 var rsaExchange = jwks({
@@ -14,15 +13,21 @@ const jwtHeader = {
   issuer: config.ISSUER,
 };
 
+const auth0Key = config.AUTH0_KEY;
+
 function getKey(header: any, callback: Function) {
-  rsaExchange.getSigningKey(header.kid, function (err: any, key: any) {
-    if (err) {
-      callback(err, null);
-    } else {
-      var signingKey = key.publicKey || key.rsaPublicKey;
-      callback(null, signingKey);
-    }
-  });
+  if (header.kid) {
+    rsaExchange.getSigningKey(header.kid, function (err: any, key: any) {
+      if (err) {
+        callback(err, null);
+      } else {
+        var signingKey = key.publicKey || key.rsaPublicKey;
+        callback(null, signingKey);
+      }
+    });
+  } else {
+    callback(null, auth0Key);
+  }
 }
 
 export async function authenticate(token: string) {

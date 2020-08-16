@@ -11,7 +11,6 @@ export default function AuthContext({ children }) {
       domain={env.AUTH_DOMAIN}
       clientId={env.CLIENT_ID}
       redirectUri={window.location.origin + env.AUTH_URI}
-      audience={env.AUDIENCE}
       scope={env.SCOPE}
     >
       {children}

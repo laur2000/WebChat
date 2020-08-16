@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getJwtToken, verifyPermissions } from "../../../services/jwt";
+import { getJwtToken, verifyPermissions } from "../../../services/authProvider";
 import { cloneDeep } from "lodash";
 import { db } from "../../../services/db";
 /** High order function, it takes some permission parameters and returns a function middleware that will only pass

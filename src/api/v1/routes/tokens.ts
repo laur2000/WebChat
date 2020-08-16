@@ -5,7 +5,7 @@ import {
   getExpRemaining,
   invalidate,
   getJwtToken,
-} from "../../../services/jwt";
+} from "../../../services/authProvider";
 const route = Router();
 export default function (app: Router) {
   app.use("/token", route);

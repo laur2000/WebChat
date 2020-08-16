@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getJwtToken, authenticate } from "../../../services/jwt";
+import { getJwtToken, authenticate } from "../../../services/authProvider";
 export default function authenticateUser(
   req: Request,
   res: Response,

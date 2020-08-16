@@ -53,6 +53,7 @@
     "mongodb": "^3.5.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "request": "^2.88.2",
     "socket.io": "^2.3.0"
   },
   "browserslist": [

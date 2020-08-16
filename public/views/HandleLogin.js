@@ -30,11 +30,12 @@ class HandleLogin extends React.Component {
           audience: AUTH_DOMAIN,
           scope: "read:current_user",
         })
-          .then((token) =>
-            fetch(AUTH_DOMAIN + "users/" + user.sub, {
+          .then((token) => {
+            console.log(token);
+            return fetch(AUTH_DOMAIN + "users/" + user.sub, {
               headers: { Authorization: "Bearer " + token },
-            })
-          )
+            });
+          })
           .then((res) => res.json())
           .then((userData) => {
             console.log("Setting user info");

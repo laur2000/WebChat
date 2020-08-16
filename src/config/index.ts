@@ -3,12 +3,14 @@ require("dotenv").config();
 
 const privateKey = fs.readFileSync(process.env.KEY_DIR);
 const cert = fs.readFileSync(process.env.CERT_DIR);
+const auth0Key = fs.readFileSync(process.env.AUTH0_DIR);
 
 export default {
   credentials: {
     key: privateKey,
     cert: cert,
   },
+  AUTH0_KEY: auth0Key,
   PORT: process.env.PORT,
   AUDIENCE: process.env.AUDIENCE,
   ISSUER: process.env.ISSUER,
@@ -28,6 +30,7 @@ export interface IProcessEnv {
   DB_USER: string;
   DB_PASSWORD: string;
   DB_NAME: string;
+  AUTH0_DIR: string;
 }
 
 declare global {

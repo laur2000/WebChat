@@ -1,75 +1,86 @@
 import { Router, Request, Response, NextFunction } from "express";
 import authenticate from "../middlewares/authenticateUser";
 import ChannelProvider from "../../../services/channelProvider";
+import UserProvider from "../../../services/userProvider";
+import { write } from "fs";
 const route = Router();
 
 export default (app: Router) => {
-  app.use("/user", route);
+  app.use("/users", route);
+
+  route.post(
+    "/",
+    authenticate,
+    (req: Request, res: Response, next: NextFunction) => {
+      const user = res.locals.user;
+      const userData = {
+        email: user.email,
+        email_verified: user.emailVerified,
+      };
+      UserProvider.insertUser(userData)
+        .then((writeOp) => {
+          res.send({
+            error: null,
+            success: writeOp.result,
+          });
+          res.end();
+        })
+        .catch((error) => {
+          res.send({
+            error,
+            success: null,
+          });
+          res.end();
+        });
+    }
+  );
 
   route.get(
     "/@me",
     authenticate,
-    async (req: Request, res: Response, next: NextFunction) => {
+    (req: Request, res: Response, next: NextFunction) => {
       const user = res.locals.user;
       res.send(user);
       res.end();
     }
   );
 
-  route.post("/", (req: Request, res: Response, next: NextFunction) => {
-    const payload = req.body;
-    if (!payload || !payload.secret) {
-      res.status(400);
-      res.send({
-        error: "Payload secret was not providen",
-        success: null,
-      });
-      res.end();
-    } else {
-    }
-  });
-
   route.patch(
     "/@me",
     authenticate,
     async (req: Request, res: Response, next: NextFunction) => {
       const payload = req.body;
-      const channelId = req.params.channelId;
-      if (!payload || Object.keys(payload).length == 0) {
-        res.status(400);
-        res.send({
-          error: "Payload is empty",
-          success: null,
-        });
-        res.end();
-      } else if (payload.secret) {
-        res.status(403);
-        res.send({
-          error: "Secret cannot be modified in this endpoint",
-          success: null,
-        });
-        res.end();
-      } else {
-        try {
-          const channel = await ChannelProvider.updateChannel(
-            channelId,
-            payload
-          );
+      const user = res.locals.user;
+      const updatedUser: { [key: string]: any } = {};
 
+      updatedUser.email = user.email;
+      if (user.should_verify_email) {
+        updatedUser.email_verified = true;
+      }
+      if (payload) {
+        if (payload.username) {
+          updatedUser.username = payload.username;
+        }
+        if (payload.avatar) {
+          updatedUser.avatar = payload.avatar;
+        }
+      }
+      console.log(updatedUser);
+      UserProvider.updateUser(updatedUser)
+        .then((operation) => {
           res.send({
             error: null,
-            success: channel,
+            success: operation.value,
           });
           res.end();
-        } catch (error) {
-          res.status(404);
+        })
+        .catch((error) => {
           res.send({
-            error: "Channel not Found",
+            error,
             success: null,
           });
           res.end();
-        }
-      }
+        });
     }
   );
 
