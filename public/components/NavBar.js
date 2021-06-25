@@ -1,4 +1,5 @@
 import React from "react";
+import brand_image from "../images/icon.png";
 
 const NavBar = () => {
   return (
@@ -15,24 +16,14 @@ const NavBar = () => {
         style={{ width: "60%", boxShadow: "none", marginBottom: "0px" }}
       >
         <img
-          src="icon.eebb0f3a.png"
+          src={brand_image}
           alt="Brand"
           style={{ width: "32px", marginRight: "5px" }}
         ></img>
         <a className="navbar-brand" href="/">
           WebChat
         </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item"></li>
