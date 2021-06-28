@@ -4,11 +4,12 @@ import Chat from "../components/Chat";
 import SideBar from "../components/SideBar";
 
 const ChatPage = () => {
+  console.log("ChatPage rendering");
   const [metadata] = useContext(metadataContext);
   const username = metadata.userData.username;
   const token = metadata.appData.global_token;
   const connection = JSON.parse(atob(token.split(".")[1]));
-  console.log("ChatPage rendering");
+ 
   return (
     <div className="wrapper">
       <SideBar username={username} />

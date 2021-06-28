@@ -5,8 +5,10 @@ import { Router } from "@reach/router";
 import AuthContext from "./contexts/AuthContext";
 import ChatPage from "./views/ChatPage";
 import LandingPage from "./views/LandingPage";
-import HandleLogin from "./views/HandleLogin";
 import UserContext from "./contexts/MetadataContext";
+import "@babel/polyfill";
+import "antd/dist/antd.css";
+import { InterceptAuth } from "./views/InterceptAuth";
 
 const App = () => {
   console.log("App rendering");
@@ -16,9 +18,11 @@ const App = () => {
       <AuthContext>
         <UserContext>
           <Router>
-            <LandingPage default path="/" />
-            <ChatPage path="/webchat" />
-            <HandleLogin path="/auth" />
+            <LandingPage path="/" />
+            
+            <InterceptAuth default>
+              <ChatPage path="/webchat" />
+            </InterceptAuth>
           </Router>
         </UserContext>
       </AuthContext>

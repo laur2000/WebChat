@@ -2,7 +2,6 @@ import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "../components/Loading";
 import { Link } from "@reach/router";
-import NavBar from "../components/NavBar";
 import appImage from "../images/app_demo.PNG";
 
 const LandingPage = () => {

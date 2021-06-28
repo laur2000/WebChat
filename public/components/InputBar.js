@@ -1,5 +1,6 @@
 import React from "react";
 
+import {RecordAudio} from "./RecordAudio";
 class InputBar extends React.Component {
   state = {
     text: "",
@@ -49,6 +50,7 @@ class InputBar extends React.Component {
             <i className="fas fa-paper-plane"></i>
           </button>
         </form>
+        <RecordAudio />
         <button className="btn ml-1">
           <i className="far fa-smile-beam"></i>
         </button>
